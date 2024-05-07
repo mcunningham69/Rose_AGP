@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ArcGIS defaultAssembly="Rose_AGP.dll"
+        defaultNamespace="Rose_AGP"
+        xmlns="http://schemas.esri.com/DADF/Registry"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+
+  <AddInInfo id="{0a22f19f-ed0d-4155-9240-3a49a92ff943}" version="1.0" desktopVersion="3.2.49743">
+    <Name>Rose_AGP</Name>   
+    <Description>Rose_AGP description</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>MichaelCunningham</Author>
+    <Company>Acme</Company>
+    <Date>5/7/2024 3:16:10 PM</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+
+  <modules>
+    <insertModule id="Rose_AGP_Module" className="Module1" autoLoad="false" caption="Module1">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="Rose_AGP_Tab1" caption="New Tab">
+          <group refID="Rose_AGP_Group1"/>
+        </tab>-->
+      </tabs>
+              
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="Rose_AGP_Group1" caption="Group 1" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+        </group>
+      </groups>
+      
+      <controls>
+        <!-- add your controls here -->
+      </controls> 
+      
+    </insertModule>
+  </modules>
+</ArcGIS>
