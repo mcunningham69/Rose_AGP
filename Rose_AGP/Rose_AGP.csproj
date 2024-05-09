@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows8.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -14,8 +14,25 @@
     <Content Include="Images\AddInDesktop32.png" />
     <Content Include="DarkImages\AddInDesktop16.png" />
     <Content Include="DarkImages\AddInDesktop32.png" />
+    <Content Include="Images\Database_32.png" />
+    <Content Include="Images\rose1.png" />
+    <Content Include="Images\rose2.png" />
+    <Content Include="Images\rose3.png" />
+    <Content Include="Images\rose4.png" />
+    <Content Include="Images\rose5.png" />
+    <Content Include="Images\rose6.png" />
+    <Content Include="Images\setGDB.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Remove="Images\Database_32.png" />
+    <None Remove="Images\rose1.png" />
+    <None Remove="Images\rose2.png" />
+    <None Remove="Images\rose3.png" />
+    <None Remove="Images\rose4.png" />
+    <None Remove="Images\rose5.png" />
+    <None Remove="Images\rose6.png" />
+    <None Remove="Images\setGDB.png" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="ArcGIS.Desktop.Framework">
       <HintPath>C:\Program Files\ArcGIS\Pro\bin\ArcGIS.Desktop.Framework.dll</HintPath>

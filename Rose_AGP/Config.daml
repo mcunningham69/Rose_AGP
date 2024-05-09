@@ -1,43 +1,86 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ArcGIS defaultAssembly="Rose_AGP.dll"
-        defaultNamespace="Rose_AGP"
-        xmlns="http://schemas.esri.com/DADF/Registry"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-
+﻿<ArcGIS defaultAssembly="Rose_AGP.dll" defaultNamespace="Rose_AGP" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
   <AddInInfo id="{0a22f19f-ed0d-4155-9240-3a49a92ff943}" version="1.0" desktopVersion="3.2.49743">
-    <Name>Rose_AGP</Name>   
-    <Description>Rose_AGP description</Description>
+    <Name>Lineament Analysis Program</Name>
+    <Description>This add-in creates a new tab called "SRK" and a number of buttons for conducting some simple lineament analysis</Description>
     <Image>Images\AddinDesktop32.png</Image>
-    <Author>MichaelCunningham</Author>
-    <Company>Acme</Company>
+    <Author>Michael Cunningham</Author>
+    <Company>SRK Consutling</Company>
     <Date>5/7/2024 3:16:10 PM</Date>
-    <Subject>Framework</Subject>
+    <Subject>Geoprocessing</Subject>
     <!-- Note subject can be one or more of these topics:
                     Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
   </AddInInfo>
-
   <modules>
-    <insertModule id="Rose_AGP_Module" className="Module1" autoLoad="false" caption="Module1">
+    <insertModule id="Rose_AGP_Module" className="Module1" autoLoad="false" caption="Lineaments">
       <!-- uncomment to have the control hosted on a separate tab-->
       <tabs>
         <!--<tab id="Rose_AGP_Tab1" caption="New Tab">
           <group refID="Rose_AGP_Group1"/>
         </tab>-->
+        <tab id="Rose_AGP_Tab1" caption="Trend Analyses" keytip="Lineament Analysis Program">
+          <group refID="Rose_AGP_Group1" />
+        </tab>
       </tabs>
-              
       <groups>
         <!-- comment this out if you have no controls on the Addin tab to avoid
               an empty group-->
-        <group id="Rose_AGP_Group1" caption="Group 1" appearsOnAddInTab="true">
+        <group id="Rose_AGP_Group1" caption="Rose Petal" appearsOnAddInTab="true">
           <!-- host controls within groups -->
+          <button refID="Rose_AGP_RosePalette" size="large" />
+          <buttonPalette refID="Rose_AGP_RosePalette" />
+          <buttonPalette refID="Rose_AGP_subRosePalette" />
+          <button refID="Rose_AGP_btnDatabase" size="large" />
+          <buttonPalette refID="Rose_AGP_btnDatabase" />
         </group>
       </groups>
-      
       <controls>
         <!-- add your controls here -->
-      </controls> 
-      
+        <button id="Rose_AGP_RosePalette_Items_Button1" caption="Length" className="RosePalette_button1" loadOnClick="true" smallImage="Images\rose5.png" largeImage="Images\rose5.png" keytip="">
+          <tooltip heading="Regional Length">
+				  Regional Length Rose<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_RosePalette_Items_Button2" caption="Frequency" className="RosePalette_button2" loadOnClick="true" smallImage="Images\rose2.png" largeImage="Images\rose2.png" keytip="">
+          <tooltip heading="Regional Frequency">
+				  Regional Frequency Rose<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_RosePalette_Items_Button3" caption="From Points" className="RosePalette_button3" loadOnClick="true" smallImage="Images\rose3.png" largeImage="Images\rose3.png" keytip="">
+          <tooltip heading="Regional Points">
+				  Regional Frequency from point<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_subRosePalette_Items_Button1" caption="Length" className="subRosePalette_button1" loadOnClick="true" smallImage="Images\rose1.png" largeImage="Images\rose1.png" keytip="">
+          <tooltip heading="Subcell Length">Subcell Length Rose<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_subRosePalette_Items_Button2" caption="Frequency" className="subRosePalette_button2" loadOnClick="true" smallImage="Images\rose4.png" largeImage="Images\rose4.png" keytip="">
+          <tooltip heading="Subcell Frequency">Subcell Frequency Rose<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_subRosePalette_Items_Button3" caption="From Points" className="subRosePalette_button3" loadOnClick="true" smallImage="Images\rose6.png" largeImage="Images\rose6.png" keytip="">
+          <tooltip heading="SubCell Points">Subcell Frequency from Points<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_btnDatabase_Items_Button1" caption="Select Existing" className="btnDatabase_button1" loadOnClick="true" smallImage="Images\setGDB.png" largeImage="Images\setGDB.png" keytip="">
+			<tooltip heading="Select Geodatabase">Select an existing geodatabase<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_btnDatabase_Items_Button2" caption="Create New" className="btnDatabase_button2" loadOnClick="true" smallImage="Images\Database_16.png" largeImage="Images\Database_32.png" keytip="">
+			<tooltip heading="New Geodatabase">Create new geodatabase<disabledText /></tooltip>
+        </button>
+
+      </controls>
+      <palettes>
+        <buttonPalette id="Rose_AGP_RosePalette" caption="Regional Rose" dropDown="false" menuStyle="true">
+          <button refID="Rose_AGP_RosePalette_Items_Button1" />
+          <button refID="Rose_AGP_RosePalette_Items_Button2" />
+          <button refID="Rose_AGP_RosePalette_Items_Button3" />
+        </buttonPalette>
+        <buttonPalette id="Rose_AGP_subRosePalette" caption="Subcell Rose" dropDown="true" menuStyle="true">
+          <button refID="Rose_AGP_subRosePalette_Items_Button1" />
+          <button refID="Rose_AGP_subRosePalette_Items_Button2" />
+          <button refID="Rose_AGP_subRosePalette_Items_Button3" />
+        </buttonPalette>
+        <buttonPalette id="Rose_AGP_btnDatabase" caption="Geodatabase" dropDown="false" menuStyle="true">
+          <button refID="Rose_AGP_btnDatabase_Items_Button1" />
+          <button refID="Rose_AGP_btnDatabase_Items_Button2" />
+          <button refID="Rose_AGP_btnDatabase_Items_Button3" />
+        </buttonPalette>
+      </palettes>
     </insertModule>
   </modules>
 </ArcGIS>

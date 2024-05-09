@@ -1,0 +1,246 @@
+﻿<Window x:Class="Rose_AGP.RunProgram"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rose_AGP"
+        mc:Ignorable="d"
+        d:DesignHeight="300" d:DesignWidth="550"
+        Title="Rose Diagram Program" Height="Auto" MaxHeight="300" Width="550" AllowDrop="True" Background="Lavender" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" Loaded="Window_Loaded">
+
+    <Window.Resources>
+
+        <ControlTemplate x:Key="temGlassButton" TargetType="Button">
+            <ControlTemplate.Resources>
+                <!-- Base style that sets corner radii and stroke thickness. -->
+                <Style x:Key="styBase" TargetType="Rectangle">
+                    <Setter Property="RadiusX" Value="20"/>
+                    <Setter Property="RadiusY" Value="20"/>
+                    <Setter Property="StrokeThickness" Value="5"/>
+                </Style>
+
+                <!-- Style for "normal" status. -->
+                <Style TargetType="Rectangle" BasedOn="{StaticResource styBase}">
+                    <Setter Property="Fill">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="DarkGreen" Offset="0"/>
+                                <GradientStop Color="LightGreen" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="DarkGreen" Offset="1"/>
+                                <GradientStop Color="LightGreen" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+                <!-- Style when IsDefaulted. -->
+                <Style x:Key="styIsDefaulted" TargetType="Rectangle" BasedOn="{StaticResource styBase}">
+                    <Setter Property="Fill">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="DarkGreen" Offset="0"/>
+                                <GradientStop Color="LightGreen" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="DarkGreen" Offset="1"/>
+                                <GradientStop Color="Black" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+                <!-- Style when disabled. -->
+                <Style x:Key="styDisabled" TargetType="Rectangle" BasedOn="{StaticResource styBase}">
+                    <Setter Property="Opacity" Value="0.75"/>
+                    <Setter Property="Fill">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="Gray" Offset="0"/>
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Stroke">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="Gray" Offset="1"/>
+                                <GradientStop Color="White" Offset="0"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ControlTemplate.Resources>
+            <Grid Name="grdMain" ClipToBounds="True" Opacity="0.5"
+			 Width="{TemplateBinding Width}"
+			 Height="{TemplateBinding Height}">
+                <Rectangle Name="rectMain"/>
+
+                <ContentPresenter
+				 VerticalAlignment="Center"
+                 HorizontalAlignment="Center"/>
+            </Grid>
+
+            <!-- Behaviors. -->
+            <ControlTemplate.Triggers>
+                <!-- Mouse over. -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="grdMain" Property="Opacity"
+                     Value="0.75"/>
+                </Trigger>
+
+                <!-- Focus. -->
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter TargetName="grdMain" Property="Opacity"
+                     Value="0.75"/>
+                </Trigger>
+
+                <!-- Defaulted. -->
+                <Trigger Property="IsDefaulted" Value="True">
+                    <Setter TargetName="rectMain" Property="Style"
+                     Value="{StaticResource styIsDefaulted}"/>
+                </Trigger>
+
+                <!-- Pressed. This comes after Focus so it gets precedence. -->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="grdMain" Property="Opacity"
+                     Value="1"/>
+                </Trigger>
+
+                <!-- Disabled. This comes last so it gets ultimate precedence. -->
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="rectMain" Property="Style"
+                     Value="{StaticResource styDisabled}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <LinearGradientBrush x:Key="GreenBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="Green" Offset="0"/>
+            <GradientStop Color="Lime" Offset="0.3"/>
+            <GradientStop Color="Transparent" Offset="0.8"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BlueBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="LightBlue" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+        <Style x:Key="SizeStyle" TargetType="FrameworkElement">
+            <Setter Property="Width" Value="250" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource SizeStyle}">
+            <Setter Property="Background" Value="{StaticResource BlueBrush}"/>
+            <Setter Property="Margin" Value="25,5,5,5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Width" Value="120"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Width" Value="105"/>
+                    <Setter Property="Height" Value="200"/>
+                    <Setter Property="FontSize" Value="18"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid Name="grdMain">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="227*"/>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="55*"/>
+            <ColumnDefinition Width="222*"/>
+            <ColumnDefinition Width="15"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="110"/>
+                <Setter Property="Margin" Value="10"/>
+                <Setter Property="FontStyle" Value="Normal"/>
+                <Setter Property="FontSize" Value="18"/>
+
+                <Setter Property="Template" Value="{StaticResource temGlassButton}"/>
+            </Style>
+
+            <Style TargetType="{x:Type DataGrid}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter Property="Foreground" Value="Gray"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <TextBox Name="txtVector" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Width="150" Height="20" Visibility="Visible" Text="untitled"/>
+
+        <CheckBox Name="chkSelected" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3" Content="Selected Features" IsEnabled="True" IsChecked="True" Margin="0,0,110,0" Visibility="Visible" Click="chkSelected_Click" />
+
+        <Grid Grid.Column="2" Grid.Row="2" Grid.RowSpan="5" Grid.ColumnSpan="3" Margin="15,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <CheckBox Name="chkStatistics" Grid.Column="0" Grid.Row="2" Content="Save Statistics" IsChecked="False"/>
+            <CheckBox Name="chkCells" Grid.Column="0" Grid.Row="1" Content="Save Fishnet"/>
+            <CheckBox Name="chkRegional" Grid.Column="0" Grid.Row="1" Content="Regional Rose Plot" IsChecked="True" Visibility="Hidden"/>
+            <CheckBox Name="chkAverage" Grid.Column="0" Grid.Row="3" Content="Average azimuth" IsChecked="False" Visibility="Hidden"/>
+            <CheckBox Name="chkDirection" Grid.Column="0" Grid.Row="4" Content="Direction" IsChecked="False" IsEnabled="True" Visibility="Hidden"/>
+
+        </Grid>
+
+        <Label Grid.Column="1" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Interval (°)" Margin="0,0,0,0"/>
+        <Label Name="lblSubcell" Grid.Column="2" Grid.Row="6" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Subcell Size" Visibility="Hidden" Margin="15,0,0,0"/>
+        <Label Name="lblInfo" Grid.Column="4" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Map Units" FontSize="8" Visibility="Hidden"/>
+        <TextBox Name="txtInterval" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="50" Height="25" Margin="100,0,0,0" Text="20" />
+        <TextBox Name="txtCell" Grid.Column="4" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="50" Height="25" Margin="58,0,0,0" Visibility="Hidden" Text="5000"/>
+
+
+        <Label Name="lblDirection" Grid.Column="2" Grid.Row="7" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Direction Field" FontSize="12" Margin="15,0,0,0" Visibility="Hidden"/>
+        <Label Name="lblDip" Grid.Column="4" Grid.Row="6" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Dip Field" FontSize="12" Margin="44,0,0,0" Visibility="Hidden"/>
+        <ComboBox Grid.Column="3" Name="cboDirection" Grid.Row="7" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" FontSize="12" Margin="5,0,0,0" Visibility="Hidden" SourceUpdated="CboDirection_SourceUpdated" SelectionChanged="CboDirection_SelectionChanged"/>
+
+        <Button x:Name="btnCancel" Grid.Column="1" Grid.Row="8" Width="100" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Left" Content="Cancel" IsEnabled="True" Click="BtnCancel_Click" />
+        <Button Visibility="Hidden" x:Name="btnRefresh" Grid.Column="1" Grid.Row="8" Width="100" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="127,0,0,0" Content="Refresh" IsEnabled="True"/>
+        <Button x:Name="btnCreate" Grid.Column="2" Grid.Row="8" Width="Auto" Height="Auto" VerticalAlignment="Center" Margin="15,0,0,0" Content="Create Rose Diagram" IsEnabled="True" Click="btnRunRose" Grid.ColumnSpan="3"/>
+
+    </Grid>
+</Window>
