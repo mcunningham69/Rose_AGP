@@ -87,12 +87,12 @@ namespace Rose_AGP
             if (InputLayer == null)
                 return "";
 
-            bool bCheck = await CheckSetProjection();
+            // bool bCheck = await CheckSetProjection();
+            string message = await CheckSetProjection("");
 
-            if (!bCheck)
+            if (message != "")
             {
-                var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unprojected data. This works much quicker with projected " +
-                    "data. Continue with unprojected?", strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (question == MessageBoxResult.No)
                     return "";
@@ -248,22 +248,48 @@ namespace Rose_AGP
 
             thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp(InputLayer);
 
-            //if (thisSpatRef.IsGeographic || thisSpatRef.IsUnknown)
-            //{
-            //    thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp();
-            //    bCheck = false;
+            if (thisSpatRef.IsGeographic || thisSpatRef.IsUnknown)
+            {
+                thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp();
+                bCheck = false;
 
-            //    if (thisSpatRef.IsGeographic)
-            //    {
-            //        thisSpatRef = await FeatureClassQuery.SetSpatialReferenceDefault();
-            //    }
-            //}
-            //else if (!thisSpatRef.IsProjected)
-            //{
+                if (thisSpatRef.IsGeographic)
+                {
+                    thisSpatRef = await FeatureClassQuery.SetSpatialReferenceDefault();
+                }
+            }
+            else if (!thisSpatRef.IsProjected)
+            {
 
-            //}
+            }
 
             return bCheck;
+        }
+
+        private async Task<string> CheckSetProjection(string strMessage)
+        {
+            strMessage = "";
+
+            thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp(InputLayer);
+
+            if (thisSpatRef.IsGeographic || thisSpatRef.IsUnknown)
+            {
+
+                if (thisSpatRef.IsGeographic)
+                {
+                    strMessage = "Unprojected data. This works much quicker with projected data. Continue with unprojected?. Continue?";
+                }
+                else if (thisSpatRef.IsUnknown)
+                {
+                    strMessage = "Spatial reference unknown. Continue?";
+                }
+            }
+            else if (!thisSpatRef.IsProjected)
+            {
+
+            }
+
+            return strMessage;
         }
 
         private async void CreateRoseDigram(bool bRegional)
