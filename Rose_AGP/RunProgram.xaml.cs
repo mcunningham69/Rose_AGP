@@ -26,6 +26,9 @@ namespace Rose_AGP
     /// </summary>
     public partial class RunProgram : Window
     {
+
+        #region Properties
+
         public RoseType _RoseType { get; set; }
         public RoseGeom _RoseGeom { get; set; }
         public FeatureLayer InputLayer { get; set; }
@@ -37,6 +40,7 @@ namespace Rose_AGP
         public string inputDatabasePath { get; set; }
         public string outputDatabasePath { get; set; }
         public SpatialReference thisSpatRef { get; set; }
+        #endregion
 
         const string strTitle = "Fiosrachadh";
         RoseDiagramParameters _rose = new RoseDiagramParameters();

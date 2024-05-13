@@ -730,30 +730,30 @@ namespace Rose_AGP
             });
 
             //check if geographic or unprojected
-            if (!mySpatRef.IsProjected)
-            {
-                if (!mySpatRef.IsUnknown)
-                {
-                    originalSpatial = mySpatRef;
+            //if (!mySpatRef.IsProjected)
+            //{
+            //    if (!mySpatRef.IsUnknown)
+            //    {
+            //        originalSpatial = mySpatRef;
 
-                    customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                    mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
-                }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
+            //        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
+            //        mySpatRef = customEnvelope.SpatialReference;
+            //        bGeographics = true;
+            //    }
+            //    else
+            //    {
+            //        mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
+            //        if (mySpatRef.IsGeographic)
+            //        {
+            //            originalSpatial = mySpatRef;
 
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
-            }
+            //            customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
+            //            mySpatRef = customEnvelope.SpatialReference;
+            //            bGeographics = true;
+            //        }
+            //    }
+            //}
 
             _parameters.SetProperties(customEnvelope);
             #endregion
