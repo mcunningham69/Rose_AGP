@@ -19,6 +19,8 @@ namespace Rose_AGP
     /// </summary>
     public partial class FishnetSize : Window
     {
+        public string Cellsize { get; set; }
+
         public FishnetSize()
         {
             InitializeComponent();

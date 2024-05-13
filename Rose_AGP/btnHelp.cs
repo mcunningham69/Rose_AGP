@@ -17,20 +17,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rose_AGP.Raster
+namespace Rose_AGP
 {
-    internal class RasterBatch : Button
+    internal class btnHelp : Button
     {
-        protected async override void OnClick()
+        protected override void OnClick()
         {
-            Module1 module = new Module1();
-            await module.BatchRun(Enum.RoseType.Other, Enum.RoseGeom.Other, false);
-            module = null;
-        }
-
-        protected override void OnUpdate()
-        {
-            this.Enabled = true;
         }
     }
 }

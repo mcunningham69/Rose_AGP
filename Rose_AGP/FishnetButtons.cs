@@ -24,6 +24,13 @@ namespace Rose_AGP
     {
         protected override void OnClick()
         {
+            Module1 module = new Module1();
+            module.FishnetClass(true);
+            module = null;
+        }
+        protected override void OnUpdate()
+        {
+            this.Enabled = true;
         }
     }
 
@@ -31,14 +38,15 @@ namespace Rose_AGP
     {
         protected override void OnClick()
         {
+            Module1 module = new Module1();
+            module.FishnetClass(false);
+            module = null;
+        }
+        protected override void OnUpdate()
+        {
+            this.Enabled = true;
         }
     }
 
-    internal class FishnetButtons_button3 : Button
-    {
-        protected override void OnClick()
-        {
-        }
-    }
 
 }

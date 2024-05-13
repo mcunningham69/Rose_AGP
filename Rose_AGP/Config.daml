@@ -19,27 +19,35 @@
         </tab>-->
         <tab id="Rose_AGP_Tab1" caption="Trend Analyses" keytip="Lineament Analysis Program">
           <group refID="Rose_AGP_Group1" />
+          <group refID="Rose_AGP_Group2" />
+          <group refID="Rose_AGP_Group3" />
         </tab>
       </tabs>
       <groups>
         <!-- comment this out if you have no controls on the Addin tab to avoid
               an empty group-->
-        <group id="Rose_AGP_Group1" caption="Rose Petal" appearsOnAddInTab="true">
+        <group id="Rose_AGP_Group1" caption="Rose Petal and Extents" appearsOnAddInTab="true">
           <!-- host controls within groups -->
           <button refID="Rose_AGP_RosePalette" size="large" />
           <buttonPalette refID="Rose_AGP_RosePalette" />
           <buttonPalette refID="Rose_AGP_subRosePalette" />
-          <button refID="Rose_AGP_btnDatabase" size="large" />
-          <buttonPalette refID="Rose_AGP_btnDatabase" />
-          <button refID="Rose_AGP_FishnetButtons" size="large" />
-          <buttonPalette refID="Rose_AGP_FishnetButtons" />
+          
+        </group>
+        <group id="Rose_AGP_Group2" caption="Raster lineament analyse" appearsOnAddInTab="true">
           <button refID="Rose_AGP_Raster_RasterBatch" size="large" />
           <buttonPalette refID="Rose_AGP_Raster_RasterButtons" />
           <buttonPalette refID="Rose_AGP_Raster_RasterMovingStatistics" />
         </group>
+        <group id="Rose_AGP_Group3" caption="Other" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <buttonPalette refID="Rose_AGP_btnDatabase" />
+          <buttonPalette refID="Rose_AGP_FishnetButtons" />
+		<button refID="Rose_AGP_btnHelp" size="large" />
+        </group>
+
       </groups>
       <controls>
-        <!-- add your controls here -->
+        <!-- Regional rose -->
         <button id="Rose_AGP_RosePalette_Items_Button1" caption="Length" className="RosePalette_button1" loadOnClick="true" smallImage="Images\rose5.png" largeImage="Images\rose5.png" keytip="">
           <tooltip heading="Regional Length">
 				  Regional Length Rose<disabledText /></tooltip>
@@ -52,6 +60,7 @@
           <tooltip heading="Regional Points">
 				  Regional Frequency from point<disabledText /></tooltip>
         </button>
+        <!-- sub rose -->
         <button id="Rose_AGP_subRosePalette_Items_Button1" caption="Length" className="subRosePalette_button1" loadOnClick="true" smallImage="Images\rose1.png" largeImage="Images\rose1.png" keytip="">
           <tooltip heading="Subcell Length">Subcell Length Rose<disabledText /></tooltip>
         </button>
@@ -61,44 +70,77 @@
         <button id="Rose_AGP_subRosePalette_Items_Button3" caption="From Points" className="subRosePalette_button3" loadOnClick="true" smallImage="Images\rose6.png" largeImage="Images\rose6.png" keytip="">
           <tooltip heading="SubCell Points">Subcell Frequency from Points<disabledText /></tooltip>
         </button>
+        <!-- Database -->
         <button id="Rose_AGP_btnDatabase_Items_Button1" caption="Select Existing" className="btnDatabase_button1" loadOnClick="true" smallImage="Images\setGDB.png" largeImage="Images\setGDB.png" keytip="">
           <tooltip heading="Select Geodatabase">Select an existing geodatabase<disabledText /></tooltip>
         </button>
         <button id="Rose_AGP_btnDatabase_Items_Button2" caption="Create New" className="btnDatabase_button2" loadOnClick="true" smallImage="Images\Database_16.png" largeImage="Images\Database_32.png" keytip="">
           <tooltip heading="New Geodatabase">Create new geodatabase<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_FishnetButtons" caption="FishnetButtons" className="FishnetButtons" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32">
-          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        <!-- Fishnet -->
+        <button id="Rose_AGP_FishnetButtons_Items_Button1" caption="Regional Fishnet" className="FishnetButtons_button1" loadOnClick="true" smallImage="Images\square.png" largeImage="Images\square.png" keytip="">
+          <tooltip heading="Regional Fishnet">Creates a layer of the input extent<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_FishnetButtons_Items_Button1" caption="Palette Button 1" className="FishnetButtons_button1" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 1">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_FishnetButtons_Items_Button2" caption="Subcell Fishnet" className="FishnetButtons_button2" loadOnClick="true" smallImage="Images\fishnet.png" largeImage="Images\fishnet.png" keytip="">
+          <tooltip heading="Subcell Fishnet">Creates a layer divided into subcells<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_FishnetButtons_Items_Button2" caption="Palette Button 2" className="FishnetButtons_button2" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 2">ToolTip<disabledText /></tooltip>
+        <!-- raster -->
+        <button id="Rose_AGP_Raster_RasterBatch" caption="RasterBatch" className="Rose_AGP.Raster.RasterBatch" loadOnClick="true" smallImage="Images\ml.png" largeImage="Images\ml.png">
+          <tooltip heading="Lineament Analysis">Raster batch process<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_FishnetButtons_Items_Button3" caption="Palette Button 3" className="FishnetButtons_button3" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 3">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button1" caption="Relative Entropy" className="Rose_AGP.Raster.RasterButtons_button1" loadOnClick="true" smallImage="Images\celestial.png" largeImage="Images\celestial.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Relative Entropy<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterBatch" caption="RasterBatch" className="Rose_AGP.Raster.RasterBatch" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32">
-          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button2" caption="Group Dominance Length" className="Rose_AGP.Raster.RasterButtons_button2" loadOnClick="true" smallImage="Images\wine.png" largeImage="Images\wine.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Group Dominance Length<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterButtons_Items_Button1" caption="Palette Button 1" className="Rose_AGP.Raster.RasterButtons_button1" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 1">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button3" caption="Group Dominance Frequency" className="Rose_AGP.Raster.RasterButtons_button3" loadOnClick="true" smallImage="Images\reminder.png" largeImage="Images\reminder.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Group Dominance Frequency<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterButtons_Items_Button2" caption="Palette Button 2" className="Rose_AGP.Raster.RasterButtons_button2" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 2">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button4" caption="Group Mean Length" className="Rose_AGP.Raster.RasterButtons_button4" loadOnClick="true" smallImage="Images\Mapserver.png" largeImage="Images\Mapserver.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Group Mean Length<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterButtons_Items_Button3" caption="Palette Button 3" className="Rose_AGP.Raster.RasterButtons_button3" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 3">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button5" caption="Group Mean Frequency" className="Rose_AGP.Raster.RasterButtons_button5" loadOnClick="true" smallImage="Images\network.png" largeImage="Images\network.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Group Mean Frequency<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button1" caption="Palette Button 1" className="Rose_AGP.Raster.RasterMovingStatistics_button1" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 1">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button6" caption="Density Length" className="Rose_AGP.Raster.RasterButtons_button6" loadOnClick="true" smallImage="Images\spy.png" largeImage="Images\spy.png" keytip="">
+          <tooltip heading="Raster Analysis">Calculates Density Length<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button2" caption="Palette Button 2" className="Rose_AGP.Raster.RasterMovingStatistics_button2" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 2">ToolTip<disabledText /></tooltip>
+        <button id="Rose_AGP_Raster_RasterButtons_Items_Button7" caption="Density Frequency" className="Rose_AGP.Raster.RasterButtons_button7" loadOnClick="true" smallImage="Images\snake.png" largeImage="Images\snake.png" keytip="">
+          <tooltip heading="Raster Analysis"> Calculates Density Frequency<disabledText /></tooltip>
         </button>
-        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button3" caption="Palette Button 3" className="Rose_AGP.Raster.RasterMovingStatistics_button3" loadOnClick="true" smallImage="GenericButtonGrey16" largeImage="GenericButtonGrey32">
-          <tooltip heading="Palette Button 3">ToolTip<disabledText /></tooltip>
+
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button1" caption="Relative Entropy" className="Rose_AGP.Raster.RasterMovingStatistics_button1" loadOnClick="true" smallImage="Images\Bessy16.png" largeImage="Images\Bessy32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Relative Entropy Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button2" caption="Group Dominance Length" className="Rose_AGP.Raster.RasterMovingStatistics_button2" loadOnClick="true" smallImage="Images\colorwheel16.png" largeImage="Images\colorwheel32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Group Dominance Length Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button3" caption="Group Dominance Frequency" className="Rose_AGP.Raster.RasterMovingStatistics_button3" loadOnClick="true" smallImage="Images\T-Rex16.png" largeImage="Images\T-Rex32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Group Dominance Frequency Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button4" caption="Group Mean Length" className="Rose_AGP.Raster.RasterMovingStatistics_button4" loadOnClick="true" smallImage="Images\EvilGenius16.png" largeImage="Images\EvilGenius32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Group Mean Length Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button5" caption="Group Mean Frequency" className="Rose_AGP.Raster.RasterMovingStatistics_button5" loadOnClick="true" smallImage="Images\panda16.png" largeImage="Images\panda32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Group Mean Frequency Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button6" caption="Density Length" className="Rose_AGP.Raster.RasterMovingStatistics_button6" loadOnClick="true" smallImage="Images\MarsCat16.png" largeImage="Images\MarsCat32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Density Length Moving Statistics<disabledText /></tooltip>
+        </button>
+        <button id="Rose_AGP_Raster_RasterMovingStatistics_Items_Button7" caption="Density Frequency" className="Rose_AGP.Raster.RasterMovingStatistics_button7" loadOnClick="true" smallImage="Images\BexDog16.png" largeImage="Images\BexDog32.png">
+          <tooltip heading="Lineament Analysis">
+				  Calculates Density Frequency Moving Statistics<disabledText /></tooltip>
+        </button>
+
+        <button id="Rose_AGP_btnHelp" caption="Help" className="btnHelp" loadOnClick="false" smallImage="Images\Help.png" largeImage="Images\Help.png">
+			<tooltip heading="FLAP">Help and Information<disabledText /></tooltip>
         </button>
       </controls>
       <palettes>
@@ -112,25 +154,31 @@
           <button refID="Rose_AGP_subRosePalette_Items_Button2" />
           <button refID="Rose_AGP_subRosePalette_Items_Button3" />
         </buttonPalette>
-        <buttonPalette id="Rose_AGP_btnDatabase" caption="Geodatabase" dropDown="false" menuStyle="true">
+        <buttonPalette id="Rose_AGP_btnDatabase" caption="Save output" dropDown="false" menuStyle="true">
           <button refID="Rose_AGP_btnDatabase_Items_Button1" />
           <button refID="Rose_AGP_btnDatabase_Items_Button2" />
-          <button refID="Rose_AGP_btnDatabase_Items_Button3" />
         </buttonPalette>
-        <buttonPalette id="Rose_AGP_FishnetButtons" caption="FishnetButtons" dropDown="false" menuStyle="true">
+        <buttonPalette id="Rose_AGP_FishnetButtons" caption="Fishnet Cells" dropDown="false" menuStyle="true">
           <button refID="Rose_AGP_FishnetButtons_Items_Button1" />
           <button refID="Rose_AGP_FishnetButtons_Items_Button2" />
-          <button refID="Rose_AGP_FishnetButtons_Items_Button3" />
         </buttonPalette>
-        <buttonPalette id="Rose_AGP_Raster_RasterButtons" caption="RasterButtons" dropDown="false" menuStyle="true">
+        <buttonPalette id="Rose_AGP_Raster_RasterButtons" caption="Raster Analyses" dropDown="false" menuStyle="true">
           <button refID="Rose_AGP_Raster_RasterButtons_Items_Button1" />
           <button refID="Rose_AGP_Raster_RasterButtons_Items_Button2" />
           <button refID="Rose_AGP_Raster_RasterButtons_Items_Button3" />
+			<button refID="Rose_AGP_Raster_RasterButtons_Items_Button4" />
+			<button refID="Rose_AGP_Raster_RasterButtons_Items_Button5" />
+			<button refID="Rose_AGP_Raster_RasterButtons_Items_Button6" />
+			<button refID="Rose_AGP_Raster_RasterButtons_Items_Button7" />
         </buttonPalette>
-        <buttonPalette id="Rose_AGP_Raster_RasterMovingStatistics" caption="RasterMovingStatistics" dropDown="false" menuStyle="true">
+        <buttonPalette id="Rose_AGP_Raster_RasterMovingStatistics" caption="Raster Moving Statistics" dropDown="true" menuStyle="true">
           <button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button1" />
           <button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button2" />
           <button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button3" />
+			<button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button4" />
+			<button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button5" />
+			<button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button6" />
+			<button refID="Rose_AGP_Raster_RasterMovingStatistics_Items_Button7" />
         </buttonPalette>
       </palettes>
     </insertModule>

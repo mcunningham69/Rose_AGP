@@ -14,7 +14,29 @@
     <Content Include="Images\AddInDesktop32.png" />
     <Content Include="DarkImages\AddInDesktop16.png" />
     <Content Include="DarkImages\AddInDesktop32.png" />
+    <Content Include="Images\Bessy16.png" />
+    <Content Include="Images\Bessy32.png" />
+    <Content Include="Images\BexDog16.png" />
+    <Content Include="Images\BexDog32.png" />
+    <Content Include="Images\celestial.png" />
+    <Content Include="Images\colorwheel16.png" />
+    <Content Include="Images\colorwheel32.png" />
+    <Content Include="Images\Database_16.png" />
     <Content Include="Images\Database_32.png" />
+    <Content Include="Images\EvilGenius16.png" />
+    <Content Include="Images\EvilGenius32.png" />
+    <Content Include="Images\Help.png" />
+    <Content Include="Images\interesting.png" />
+    <Content Include="Images\Mapserver.png" />
+    <Content Include="Images\MarsCat16.png" />
+    <Content Include="Images\MarsCat32.png" />
+    <Content Include="Images\ml.png" />
+    <Content Include="Images\network.png" />
+    <Content Include="Images\panda16.png" />
+    <Content Include="Images\panda32.png" />
+    <Content Include="Images\Rabbit16.png" />
+    <Content Include="Images\Rabbit32.png" />
+    <Content Include="Images\reminder.png" />
     <Content Include="Images\rose1.png" />
     <Content Include="Images\rose2.png" />
     <Content Include="Images\rose3.png" />
@@ -24,7 +46,30 @@
     <Content Include="Images\setGDB.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Images\Bessy16.png" />
+    <None Remove="Images\Bessy32.png" />
+    <None Remove="Images\BexDog16.png" />
+    <None Remove="Images\BexDog32.png" />
+    <None Remove="Images\celestial.png" />
+    <None Remove="Images\colorwheel16.png" />
+    <None Remove="Images\colorwheel32.png" />
+    <None Remove="Images\Database_16.png" />
     <None Remove="Images\Database_32.png" />
+    <None Remove="Images\EvilGenius16.png" />
+    <None Remove="Images\EvilGenius32.png" />
+    <None Remove="Images\fishnet.png" />
+    <None Remove="Images\Help.png" />
+    <None Remove="Images\interesting.png" />
+    <None Remove="Images\Mapserver.png" />
+    <None Remove="Images\MarsCat16.png" />
+    <None Remove="Images\MarsCat32.png" />
+    <None Remove="Images\ml.png" />
+    <None Remove="Images\network.png" />
+    <None Remove="Images\panda16.png" />
+    <None Remove="Images\panda32.png" />
+    <None Remove="Images\Rabbit16.png" />
+    <None Remove="Images\Rabbit32.png" />
+    <None Remove="Images\reminder.png" />
     <None Remove="Images\rose1.png" />
     <None Remove="Images\rose2.png" />
     <None Remove="Images\rose3.png" />
@@ -32,6 +77,17 @@
     <None Remove="Images\rose5.png" />
     <None Remove="Images\rose6.png" />
     <None Remove="Images\setGDB.png" />
+    <None Remove="Images\snake.png" />
+    <None Remove="Images\spy.png" />
+    <None Remove="Images\square.png" />
+    <None Remove="Images\srk_logo.jpg" />
+    <None Remove="Images\T-Rex16.png" />
+    <None Remove="Images\T-Rex32.png" />
+    <None Remove="Images\TableOK_l.png" />
+    <None Remove="Images\TableOK_s.png" />
+    <None Remove="Images\UpdateDatabase_large.png" />
+    <None Remove="Images\UpdateDatabase_small.png" />
+    <None Remove="Images\wine.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ArcGIS.Desktop.Framework">
@@ -104,6 +160,20 @@
       <CopyLocal>False</CopyLocal>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\fishnet.png" />
+    <Content Include="Images\snake.png" />
+    <Content Include="Images\spy.png" />
+    <Content Include="Images\square.png" />
+    <Content Include="Images\srk_logo.jpg" />
+    <Content Include="Images\T-Rex16.png" />
+    <Content Include="Images\T-Rex32.png" />
+    <Content Include="Images\TableOK_l.png" />
+    <Content Include="Images\TableOK_s.png" />
+    <Content Include="Images\UpdateDatabase_large.png" />
+    <Content Include="Images\UpdateDatabase_small.png" />
+    <Content Include="Images\wine.png" />
   </ItemGroup>
   <Import Project="C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets" Condition="Exists('C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets') AND !Exists('Esri.ArcGISPro.Extensions.targets')" />
 </Project>

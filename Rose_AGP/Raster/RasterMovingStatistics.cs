@@ -25,6 +25,11 @@ namespace Rose_AGP.Raster
         protected override void OnClick()
         {
         }
+
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
     }
 
     internal class RasterMovingStatistics_button2 : Button
@@ -32,12 +37,64 @@ namespace Rose_AGP.Raster
         protected override void OnClick()
         {
         }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
     }
 
     internal class RasterMovingStatistics_button3 : Button
     {
         protected override void OnClick()
         {
+        }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+    }
+
+    internal class RasterMovingStatistics_button4 : Button
+    {
+        protected override void OnClick()
+        {
+        }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+    }
+
+    internal class RasterMovingStatistics_button5 : Button
+    {
+        protected override void OnClick()
+        {
+        }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+    }
+
+    internal class RasterMovingStatistics_button6 : Button
+    {
+        protected override void OnClick()
+        {
+        }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
+        }
+    }
+
+    internal class RasterMovingStatistics_button7 : Button
+    {
+        protected override void OnClick()
+        {
+        }
+        protected override void OnUpdate()
+        {
+            base.OnUpdate();
         }
     }
 
