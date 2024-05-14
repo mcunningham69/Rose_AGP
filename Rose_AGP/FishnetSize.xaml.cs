@@ -20,6 +20,7 @@ namespace Rose_AGP
     public partial class FishnetSize : Window
     {
         public string Cellsize { get; set; }
+        const string strTitle = "Fiosrachadh";
 
         public FishnetSize()
         {
@@ -33,12 +34,35 @@ namespace Rose_AGP
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-
+            this.Close();
         }
 
         private void BtnField_Click(object sender, RoutedEventArgs e)
         {
+            Cellsize = txtCell.Text;
 
+            if (Cellsize == "")
+            {
+                var exitCell = MessageBox.Show("Nothing has been entered. Do you want to re-enter a value?", strTitle,
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (exitCell == MessageBoxResult.Yes)
+                    return;
+            }
+            else
+            {
+                //Check value is valid number
+                RoseDiagramParameters mTemp = new RoseDiagramParameters();
+                string message = mTemp.SubcellErrorChecking(Cellsize);
+
+                if (message != "")
+                {
+                    MessageBox.Show(message, strTitle, MessageBoxButton.OK,MessageBoxImage.Information);
+                    return;
+                }
+            }
+
+            this.Close();
         }
     }
 }

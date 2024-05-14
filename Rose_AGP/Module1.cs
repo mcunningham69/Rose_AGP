@@ -102,16 +102,16 @@ namespace Rose_AGP
             switch (analysisType)
             {
                 case RoseType.Other:
-                    //RasterBatchAnalysis _rasterBatch = new RasterBatchAnalysis
-                    //{
-                    //    Title = "Lineament Analysis - Batch Run"
-                    //};
-                    //_rasterBatch.btnCreate.Content = "Batch Process";
-                    //_rasterBatch.InputLayer = InputLayer;
-                    //_rasterBatch.thisSpatRef = thisSpatRef;
-                    //_rasterBatch.inputDatabase = inputDatabasePath;
-                    //_rasterBatch.outputDatabase = outputDatabasePath;
-                    //_rasterBatch.Show();
+                    RasterBatchAnalysis _rasterBatch = new RasterBatchAnalysis
+                    {
+                        Title = "Lineament Analysis - Batch Run"
+                    };
+                    _rasterBatch.btnCreate.Content = "Batch Process";
+                    _rasterBatch.InputLayer = InputLayer;
+                    _rasterBatch.thisSpatRef = thisSpatRef;
+                    _rasterBatch.inputDatabase = inputDatabasePath;
+                    _rasterBatch.outputDatabase = outputDatabasePath;
+                    _rasterBatch.Show();
                     break;
 
                 case RoseType.Frequency:
@@ -647,5 +647,285 @@ namespace Rose_AGP
 
             return validName;
         }
+
+        #region Raster
+        public async Task<string> RasterModule(RasterLineamentAnalysis analysisType)
+        {
+            outputDatabasePath = "";
+            inputDatabasePath = "";
+
+            RasterProgram _rasterProgram = new RasterProgram();
+
+            try
+            {
+                string layerCheck = await BatchRunChecks(RoseGeom.Other);
+
+                if (layerCheck != "")
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(layerCheck, strTitle, MessageBoxButton.OK, MessageBoxImage.Stop);
+                    return "";
+                }
+                else
+                {
+                    //setup input Datastore
+                    //setup path
+
+                    if (inputDatastore == null)
+                    {
+                        await SetDataStoreProperty();
+                    }
+
+                    switch (analysisType)
+                    {
+                        case Enum.RasterLineamentAnalysis.RelativeEntropy:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Relative Entropy";
+                            _rasterProgram.btnCreate.Content = "Compute Relative Entropy";
+                            _rasterProgram._analysis = RasterLineamentAnalysis.RelativeEntropy;
+                            break;
+                        case Enum.RasterLineamentAnalysis.DensityLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Density Length";
+                            _rasterProgram.btnCreate.Content = "Compute Density Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.DensityLength;
+                            break;
+                        case Enum.RasterLineamentAnalysis.DensityFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Density Frequency";
+                            _rasterProgram.btnCreate.Content = "Compute Density Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.DensityFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupDominanceFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Dominance Frequency";
+                            _rasterProgram.btnCreate.Content = "Compute Group Dominance Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupDominanceFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupDominanceLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Dominance Length";
+                            _rasterProgram.btnCreate.Content = "Compute Group Dominance Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupDominanceLength;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupMeansFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Mean Frequency";
+                            _rasterProgram.btnCreate.Content = "Compute Group Mean Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupMeansFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupMeansLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Mean Length";
+                            _rasterProgram.btnCreate.Content = "Compute Group Mean Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupMeansLength;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (InputLayer == null)
+                        return "";
+
+
+                    _rasterProgram.inputDatabase = inputDatabasePath;
+                    _rasterProgram.outputDatabase = outputDatabasePath;
+
+                    bool bCheck = await CheckSetProjection();
+
+                    if (!bCheck)
+                    {
+                        var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unprojected data. This works much quicker with projected " +
+                            "data. Continue with unprojected?", strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (question == MessageBoxResult.No)
+                            return "";
+
+                    }
+
+                    _rasterProgram.thisSpatRef = thisSpatRef;
+                    _rasterProgram.InputLayer = InputLayer;
+                    _rasterProgram.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ex.Message, strTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                return ex.Message;
+            }
+
+            return "";
+        }
+
+        public async Task<string> MovingStatisticsModule(RasterLineamentAnalysis analysisType)
+        {
+            outputDatabasePath = "";
+            inputDatabasePath = "";
+
+            MovingStatistics _rasterProgram = new MovingStatistics();
+
+            try
+            {
+                string layerCheck = await BatchRunChecks(RoseGeom.Other);
+
+                if (layerCheck != "")
+                {
+                    ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(layerCheck, strTitle, MessageBoxButton.OK, MessageBoxImage.Stop);
+                    return "";
+                }
+                else
+                {
+                    switch (analysisType)
+                    {
+                        case Enum.RasterLineamentAnalysis.RelativeEntropy:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Relative Entropy";
+                            _rasterProgram.btnAccept.Content = "Compute Relative Entropy";
+                            _rasterProgram._analysis = RasterLineamentAnalysis.RelativeEntropy;
+                            _rasterProgram.txtFrom.IsEnabled = false;
+                            _rasterProgram.txtTo.IsEnabled = false;
+                            break;
+                        case Enum.RasterLineamentAnalysis.DensityLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Density Length";
+                            _rasterProgram.btnAccept.Content = "Compute Density Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.DensityLength;
+                            break;
+                        case Enum.RasterLineamentAnalysis.DensityFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Density Frequency";
+                            _rasterProgram.btnAccept.Content = "Compute Density Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.DensityFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupDominanceFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Dominance Frequency";
+                            _rasterProgram.btnAccept.Content = "Compute Group Dominance Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupDominanceFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupDominanceLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Dominance Length";
+                            _rasterProgram.btnAccept.Content = "Compute Group Dominance Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupDominanceLength;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupMeansFrequency:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Mean Frequency";
+                            _rasterProgram.btnAccept.Content = "Compute Group Mean Frequency";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupMeansFrequency;
+                            break;
+                        case Enum.RasterLineamentAnalysis.GroupMeansLength:
+                            _rasterProgram.Title = "Raster Lineament Analysis - Group Mean Length";
+                            _rasterProgram.btnAccept.Content = "Compute Group Mean Length";
+                            _rasterProgram.lblFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.lblTo.Visibility = Visibility.Visible;
+                            _rasterProgram.txtFrom.Visibility = Visibility.Visible;
+                            _rasterProgram.txtTo.Visibility = Visibility.Visible;
+                            _rasterProgram.lblLen.Visibility = Visibility.Visible;
+                            _rasterProgram.txtInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram.lblInterval.Visibility = Visibility.Hidden;
+                            _rasterProgram._analysis = RasterLineamentAnalysis.GroupMeansLength;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (InputLayer == null)
+                        return "";
+
+                    _rasterProgram.inputDatabasePath = inputDatabasePath;
+                    _rasterProgram.outputDatabasePath = outputDatabasePath;
+
+                    bool bCheck = await CheckSetProjection();
+
+                    if (!bCheck)
+                    {
+                        var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unprojected data. This works much quicker with projected " +
+                            "data. Continue with unprojected?", strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (question == MessageBoxResult.No)
+                            return "";
+
+                    }
+
+                    _rasterProgram.thisSpatRef = thisSpatRef;
+                    _rasterProgram.InputLayer = InputLayer;
+                    _rasterProgram.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(ex.Message, strTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                return ex.Message;
+            }
+
+            return "";
+        }
+
+        #endregion
     }
 }

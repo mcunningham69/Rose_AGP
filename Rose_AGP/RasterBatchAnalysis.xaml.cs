@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ArcGIS.Desktop.Mapping;
+using ArcGIS.Core.Geometry;
+using Rose_AGP.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +22,23 @@ namespace Rose_AGP
     /// </summary>
     public partial class RasterBatchAnalysis : Window
     {
+        #region Properties and Variables
+        RoseDiagramParameters _rose = new RoseDiagramParameters();
+
+        const string strTitle = "Fiosrachadh";
+        const string default_pixel_type = "8_BIT_UNSIGNED";
+
+        private bool GroupLayers { get; set; }
+        public FeatureLayer InputLayer { get; set; }
+        private string progressMessage { get; set; }
+        public SpatialReference thisSpatRef { get; set; }
+        public Enum.RoseGeom _RoseGeom { get; set; }
+        public Enum.RoseType _RoseType { get; set; }
+        private string WindowTitle { get; set; }
+        public string inputDatabase { get; set; }
+        public string outputDatabase { get; set; }
+        public RasterLineamentAnalysis _analysis { get; set; }
+        #endregion
         public RasterBatchAnalysis()
         {
             InitializeComponent();

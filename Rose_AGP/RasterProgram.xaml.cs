@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ArcGIS.Desktop.Mapping;
+using Rose_AGP.Enum;
+using ArcGIS.Core.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +22,14 @@ namespace Rose_AGP
     /// </summary>
     public partial class RasterProgram : Window
     {
+        const string strTitle = "Fiosrachadh";
+        public FeatureLayer InputLayer { get; set; }
+        public RasterLineamentAnalysis _analysis { get; set; }
+        public SpatialReference thisSpatRef { get; set; }
+        public string inputDatabase { get; set; }
+        public string outputDatabase { get; set; }
+        private string WindowTitle { get; set; }
+
         public RasterProgram()
         {
             InitializeComponent();
