@@ -223,23 +223,57 @@ namespace Rose_AGP
             return "";
         }
 
-        private async Task<bool> SetDataStoreProperty()
+        private async void CreateRoseDigram(bool bRegional)
         {
-            await QueuedTask.Run(() =>
+
+            //Run actual program now that all prepared. Pass in Feature layer input and Rose Type    
+            RunProgram mRun = new RunProgram
             {
-                var table = InputLayer.GetTable();
-                inputDatastore = table.GetDatastore();
-                var workspaceNameDef = inputDatastore.GetConnectionString();
-                inputDatabasePath = workspaceNameDef.Split('=')[1];
-            });
+                InputLayer = InputLayer,
+                _RoseType = _RoseType,
+                _RoseGeom = _RoseGeom
 
-            outputDatabasePath = CoreModule.CurrentProject.DefaultGeodatabasePath;
+            };
 
-            if (inputDatabasePath == "")
-                return false;
+
+            mRun.chkRegional.IsChecked = true;
+
+
+
+            if (_RoseGeom == RoseGeom.Point)
+            {
+                mRun.cboDirection.Visibility = Visibility.Visible;
+                mRun.chkAverage.IsEnabled = false;
+                mRun.chkAverage.IsChecked = false;
+                mRun.lblDirection.Visibility = Visibility.Visible;
+                mRun.chkDirection.Visibility = Visibility.Visible;
+                mRun.WindowTitle = "Rose Diagram - Frequency from Points using selected layer '" + InputLayer.Name.ToString() + "'";
+
+            }
+            else if (_RoseType == RoseType.Length)
+            {
+                mRun.WindowTitle = "Rose Diagram - Length weighted  using selected layer '" + InputLayer.Name.ToString() + "'";
+
+            }
             else
-                return true;
+                mRun.WindowTitle = "Rose Diagram - Frequency of occurrence  using selected layer '" + InputLayer.Name.ToString() + "'";
+
+            if (!bRegional)
+            {
+                mRun.txtCell.Visibility = Visibility.Visible;
+                mRun.lblSubcell.Visibility = Visibility.Visible;
+                mRun.chkRegional.IsChecked = false;
+                mRun.lblInfo.Visibility = Visibility.Visible;
+                mRun.btnCreate.Content = "Create Rose Plots";
+            }
+
+            mRun.inputDatabasePath = inputDatabasePath;
+            mRun.outputDatabasePath = outputDatabasePath;
+            mRun.thisSpatRef = thisSpatRef;
+            mRun.Show();
+
         }
+
 
         #region Spatial reference
         private async Task<bool> CheckSetProjection()
@@ -293,56 +327,6 @@ namespace Rose_AGP
         }
         #endregion
 
-        private async void CreateRoseDigram(bool bRegional)
-        {
-
-            //Run actual program now that all prepared. Pass in Feature layer input and Rose Type    
-            RunProgram mRun = new RunProgram
-            {
-                InputLayer = InputLayer,
-                _RoseType = _RoseType,
-                _RoseGeom = _RoseGeom
-
-            };
-
-
-            mRun.chkRegional.IsChecked = true;
-
-
-
-            if (_RoseGeom == RoseGeom.Point)
-            {
-                mRun.cboDirection.Visibility = Visibility.Visible;
-                mRun.chkAverage.IsEnabled = false;
-                mRun.chkAverage.IsChecked = false;
-                mRun.lblDirection.Visibility = Visibility.Visible;
-                mRun.chkDirection.Visibility = Visibility.Visible;
-                mRun.WindowTitle = "Rose Diagram - Frequency from Points using selected layer '" + InputLayer.Name.ToString() + "'";
-
-            }
-            else if (_RoseType == RoseType.Length)
-            {
-                mRun.WindowTitle = "Rose Diagram - Length weighted  using selected layer '" + InputLayer.Name.ToString() + "'";
-
-            }
-            else
-                mRun.WindowTitle = "Rose Diagram - Frequency of occurrence  using selected layer '" + InputLayer.Name.ToString() + "'";
-
-            if (!bRegional)
-            {
-                mRun.txtCell.Visibility = Visibility.Visible;
-                mRun.lblSubcell.Visibility = Visibility.Visible;
-                mRun.chkRegional.IsChecked = false;
-                mRun.lblInfo.Visibility = Visibility.Visible;
-                mRun.btnCreate.Content = "Create Rose Plots";
-            }
-
-            mRun.inputDatabasePath = inputDatabasePath;
-            mRun.outputDatabasePath = outputDatabasePath;
-            mRun.thisSpatRef = thisSpatRef;
-            mRun.Show();
-
-        }
 
         #region Fishnet
         public async void FishnetClass(bool bRegional)
@@ -561,6 +545,7 @@ namespace Rose_AGP
 
         #endregion
 
+        #region Miscellaneous
         private async Task<bool> AddLayerToMap(string fileName)
         {
             string databasePath = inputDatabasePath;
@@ -647,6 +632,26 @@ namespace Rose_AGP
 
             return validName;
         }
+
+        private async Task<bool> SetDataStoreProperty()
+        {
+            await QueuedTask.Run(() =>
+            {
+                var table = InputLayer.GetTable();
+                inputDatastore = table.GetDatastore();
+                var workspaceNameDef = inputDatastore.GetConnectionString();
+                inputDatabasePath = workspaceNameDef.Split('=')[1];
+            });
+
+            outputDatabasePath = CoreModule.CurrentProject.DefaultGeodatabasePath;
+
+            if (inputDatabasePath == "")
+                return false;
+            else
+                return true;
+        }
+
+        #endregion
 
         #region Raster
         public async Task<string> RasterModule(RasterLineamentAnalysis analysisType)
