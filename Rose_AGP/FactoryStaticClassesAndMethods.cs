@@ -741,27 +741,6 @@ namespace Rose_AGP
                     mySpatRef = customEnvelope.SpatialReference;
                 }
 
-             //   if (!mySpatRef.IsUnknown)
-              //  {
-                   // originalSpatial = mySpatRef;
-
-             //       customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-             //       mySpatRef = customEnvelope.SpatialReference;
-                   // bGeographics = true;
-               //}
-               // else
-               // {
-                    //mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
-
-                    //if (mySpatRef.IsGeographic)
-                    //{
-                    //    originalSpatial = mySpatRef;
-
-                    //    customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                    //    mySpatRef = customEnvelope.SpatialReference;
-                    //    bGeographics = true;
-                    //}
-                //}
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -819,7 +798,6 @@ namespace Rose_AGP
                         }
 
                         if (bGeographics) //unproject
-                            //poly = FeatureClassQuery.ProjectPolygonToWGS84(poly).Result;
                             spoly = FeatureClassQuery.ProjectPolygonGeneric(spoly, originalSpatial).Result;
 
                         QueryFilter _querySquare = new SpatialQueryFilter
@@ -861,11 +839,6 @@ namespace Rose_AGP
                                             {
                                                 calcLine = feature.GetShape() as ArcGIS.Core.Geometry.Polyline;
                                             }
-
-                                            //if (bGeographics)
-                                            //{
-                                            //    calcLine = FeatureClassQuery.ProjectPolylineFromWGS84(calcLine).Result;
-                                            //}
 
                                             _parameters.flapParameters.Last().LenAzi.Add(new FreqLen
                                             {
@@ -954,40 +927,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
-            //if (!mySpatRef.IsProjected)
-            //{
-            //    if (!mySpatRef.IsUnknown)
-            //    {
-            //        originalSpatial = mySpatRef;
-
-            //        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-            //        mySpatRef = customEnvelope.SpatialReference;
-            //        bGeographics = true;
-            //    }
-            //    else
-            //    {
-            //        mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
-
-            //        if (mySpatRef.IsGeographic)
-            //        {
-            //            originalSpatial = mySpatRef;
-
-            //            customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-            //            mySpatRef = customEnvelope.SpatialReference;
-            //            bGeographics = true;
-            //        }
-            //    }
-            //}
-
             if (!mySpatRef.IsProjected)
             {
                 if (mySpatRef.IsGeographic)
                 {
-                     bGeographics = true;
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
                 }
+
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1045,7 +996,6 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
                         }
 
                         if (bGeographics) //unproject
-                        //                  // poly = FeatureClassQuery.ProjectPolygonToWGS84(poly).Result;
                             spoly = FeatureClassQuery.ProjectPolygonGeneric(spoly, originalSpatial).Result;
 
                         QueryFilter _querySquare = new SpatialQueryFilter
@@ -1090,11 +1040,6 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
                                             {
                                                 calcLine = feature.GetShape() as ArcGIS.Core.Geometry.Polyline;
                                             }
-
-                                            //if (bGeographics)
-                                            //{
-                                            //    calcLine = FeatureClassQuery.ProjectPolylineFromWGS84(calcLine).Result;
-                                            //}
 
                                             _parameters.flapParameters.Last().LenAzi.Add(new FreqLen
                                             {
@@ -1185,30 +1130,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1492,30 +1425,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1797,30 +1718,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
-            ////check if geographic or unprojected
-            //if (!mySpatRef.IsProjected)
-            //{
-            //    if (!mySpatRef.IsUnknown)
-            //    {
-            //        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-            //        mySpatRef = customEnvelope.SpatialReference;
-            //        bGeographics = true;
-            //    }
-            //    else
-            //    {
-            //        mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
+            //check if geographic or unprojected
+            if (!mySpatRef.IsProjected)
+            {
+                if (mySpatRef.IsGeographic)
+                {
+                    bGeographics = true;
+                    customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
+                    mySpatRef = customEnvelope.SpatialReference;
+                }
 
-            //        if (mySpatRef.IsGeographic)
-            //        {
-            //            customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-            //            mySpatRef = customEnvelope.SpatialReference;
-            //            bGeographics = true;
-            //        }
-            //    }
-            //}
+            }
 
-            if (mySpatRef.IsGeographic)
-                bGeographics = true;
 
             #endregion
             double dblMinX = 0.0;
@@ -1828,24 +1737,13 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
             double dblMinY = 0.0;
             double dblMaxY = 0.0;
 
-            //if (!bGeographics)
-            //{
-            //    //TOTAL extent
-            //    dblMinX = Math.Floor(customEnvelope.XMin);
-            //    dblMaxY = Math.Floor(customEnvelope.YMax) + 1;
-
-            //    dblMaxX = Math.Floor(customEnvelope.XMax) + 1;
-            //    dblMinY = Math.Floor(customEnvelope.YMin);
-           // }
-           // else
-           //{
                 //TOTAL extent
                 dblMinX = customEnvelope.XMin;
                 dblMaxY = customEnvelope.YMax;
 
                 dblMaxX = customEnvelope.XMax;
                 dblMinY = customEnvelope.YMin;
-            //}
+
 
             double dblCentreX = dblMinX + ((dblMaxX - dblMinX) / 2);
             double dblCentreY = dblMinY + ((dblMaxY - dblMinY) / 2);
@@ -1960,24 +1858,15 @@ int nInterval, RoseGeom roseGeom, string fieldName, bool bSelection)
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
             #endregion
 
             //TOTAL extent
@@ -2092,25 +1981,18 @@ int nInterval, RoseGeom roseGeom, string fieldName)
 
             });
 
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                    }
-                }
             }
+
             #endregion
 
             //TOTAL extent
@@ -2184,28 +2066,15 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName)
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
 
             _parameters.SetProperties(customEnvelope);
             #endregion
@@ -2345,28 +2214,15 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
 
             _parameters.SetProperties(customEnvelope);
             #endregion

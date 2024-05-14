@@ -336,6 +336,11 @@ namespace Rose_AGP
                     _parameters.flapParameters[0].CellID = cellID + 1;
             }
 
+            if (thisSpatRef.IsGeographic)
+            {
+                thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp();
+            }
+
             FeatureClass roseFC = await _Rosefactory.CreateFeatureClass("_rose", OutputName, bExist, databasePath, InputLayer, (bool)chkStatistics.IsChecked, _RoseGeom, thisSpatRef);
 
             message = await _Rosefactory.SaveAsVectorFeatures(roseFC, thisSpatRef, _parameters, false);

@@ -58,6 +58,7 @@ namespace Rose_AGP
 
         #endregion Overrides
 
+        #region Rose
         public async Task<string> BatchRun(RoseType analysisType, RoseGeom geomType, bool bRegional)
         {
             string layerCheck = "";
@@ -90,13 +91,17 @@ namespace Rose_AGP
             // bool bCheck = await CheckSetProjection();
             string message = await CheckSetProjection("");
 
-            if (message != "")
+            if (message=="Error")
+            {
+                ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Source layer and Map coordinates are Geographic. Either or both must be projected!", strTitle,MessageBoxButton.OK, MessageBoxImage.Error);
+                return "";
+            }
+            else if (message != "")
             {
                 var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (question == MessageBoxResult.No)
                     return "";
-
             }
 
             switch (analysisType)
@@ -273,7 +278,7 @@ namespace Rose_AGP
             mRun.Show();
 
         }
-
+        #endregion
 
         #region Spatial reference
         private async Task<bool> CheckSetProjection()
@@ -311,7 +316,16 @@ namespace Rose_AGP
 
                 if (thisSpatRef.IsGeographic)
                 {
-                    strMessage = "Unprojected data. This works much quicker with projected data. Continue with unprojected?. Continue?";
+
+                    SpatialReference checkRef = await FeatureClassQuery.GetSpatialReferenceProp();
+
+                    if (checkRef.IsGeographic)
+                    {
+                        strMessage = "Error";
+                        
+                    }
+                    else
+                        strMessage = "Unprojected data. This works much quicker with projected data. Continue with unprojected?. Continue?";
                 }
                 else if (thisSpatRef.IsUnknown)
                 {
