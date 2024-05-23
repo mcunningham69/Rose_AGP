@@ -10,7 +10,9 @@ using ArcGIS.Core.Geometry;
 
 namespace Rose_AGP
 {
-    //Helper Class for abstract reference
+    //Helper Class for abstract referen
+    //
+
     public class RoseFactoryPreview
     {
         public TypeOfAnalysis _factoryType;
