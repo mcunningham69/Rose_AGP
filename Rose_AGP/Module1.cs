@@ -25,7 +25,8 @@ namespace Rose_AGP
 {
     internal class Module1 : Module
     {
-        //Properties
+
+        #region Properties
         private Datastore inputDatastore { get; set; }
         private string inputDatabasePath { get; set; }
         private string outputDatabasePath { get; set; }
@@ -43,6 +44,7 @@ namespace Rose_AGP
         /// Retrieve the singleton instance to this module here
         /// </summary>
         public static Module1 Current => _this ??= (Module1)FrameworkApplication.FindModule("Rose_AGP_Module");
+        #endregion
 
         #region Overrides
         /// <summary>
@@ -784,17 +786,32 @@ namespace Rose_AGP
                     _rasterProgram.inputDatabase = inputDatabasePath;
                     _rasterProgram.outputDatabase = outputDatabasePath;
 
-                    bool bCheck = await CheckSetProjection();
+                    string message = await CheckSetProjection("");
 
-                    if (!bCheck)
+                    if (message == "Error")
                     {
-                        var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unprojected data. This works much quicker with projected " +
-                            "data. Continue with unprojected?", strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Source layer and Map coordinates are Geographic. Either or both must be projected!", strTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                        return "";
+                    }
+                    else if (message != "")
+                    {
+                        var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show(message, strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                         if (question == MessageBoxResult.No)
                             return "";
-
                     }
+
+                    //bool bCheck = await CheckSetProjection();
+
+                    //if (!bCheck)
+                    //{
+                    //    var question = ArcGIS.Desktop.Framework.Dialogs.MessageBox.Show("Unprojected data. This works much quicker with projected " +
+                    //        "data. Continue with unprojected?", strTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    //    if (question == MessageBoxResult.No)
+                    //        return "";
+
+                    //}
 
                     _rasterProgram.thisSpatRef = thisSpatRef;
                     _rasterProgram.InputLayer = InputLayer;
