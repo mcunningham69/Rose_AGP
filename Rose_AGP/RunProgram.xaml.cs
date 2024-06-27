@@ -26,6 +26,9 @@ namespace Rose_AGP
     /// </summary>
     public partial class RunProgram : Window
     {
+
+        #region Properties
+
         public RoseType _RoseType { get; set; }
         public RoseGeom _RoseGeom { get; set; }
         public FeatureLayer InputLayer { get; set; }
@@ -37,6 +40,7 @@ namespace Rose_AGP
         public string inputDatabasePath { get; set; }
         public string outputDatabasePath { get; set; }
         public SpatialReference thisSpatRef { get; set; }
+        #endregion
 
         const string strTitle = "Fiosrachadh";
         RoseDiagramParameters _rose = new RoseDiagramParameters();
@@ -248,6 +252,11 @@ namespace Rose_AGP
                     _parameters.flapParameters[0].CellID = cellID + 1;
             }
 
+            if (thisSpatRef.IsGeographic)
+            {
+                thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp();
+            }
+
             FeatureClass roseFC = await _Rosefactory.CreateFeatureClass("_rose", OutputName, bExist, databasePath,
                 InputLayer, (bool)chkStatistics.IsChecked, _RoseGeom, thisSpatRef);
 
@@ -325,6 +334,11 @@ namespace Rose_AGP
                 int cellID = await UpdateCellID();
                 if (cellID > 0)
                     _parameters.flapParameters[0].CellID = cellID + 1;
+            }
+
+            if (thisSpatRef.IsGeographic)
+            {
+                thisSpatRef = await FeatureClassQuery.GetSpatialReferenceProp();
             }
 
             FeatureClass roseFC = await _Rosefactory.CreateFeatureClass("_rose", OutputName, bExist, databasePath, InputLayer, (bool)chkStatistics.IsChecked, _RoseGeom, thisSpatRef);

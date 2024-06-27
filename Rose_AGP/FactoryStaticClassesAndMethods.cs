@@ -13,9 +13,211 @@ using ArcGIS.Core.Geometry;
 using System.IO;
 using System.Windows.Media;
 using ArcGIS.Core.Internal.Geometry;
+using ArcGIS.Core.Data.Raster;
+using ArcGIS.Desktop.Core.Geoprocessing;
 
 namespace Rose_AGP
 {
+    public static class RasterFunctions
+    {
+        public static string ProgressMessage { get; set; }
+
+        public static async Task<bool> WriteRasterValuesToGrid(RasterDataset rasterDS, FlapParameters _parameters, bool bInt)
+        {
+            VectorFunctions.ProgressMessage = "Saving Raster...";
+            await VectorFunctions.Progressor_NonCancelable();
+
+            int NoOfRows = _parameters.NoOfRows;
+            int NoOfColumns = _parameters.NoOfColumns;
+
+            await QueuedTask.Run(() =>
+            {
+                ArcGIS.Core.Data.Raster.Raster editRaster = rasterDS.CreateDefaultRaster();
+
+                int pbHeight = NoOfRows;// editRaster.GetHeight() > 128 ? 128 : editRaster.GetHeight();
+                int pbWidth = NoOfColumns;// editRaster.GetWidth() > 128 ? 128 : editRaster.GetWidth();
+
+                //create new blank pixel block
+                PixelBlock currentPb = editRaster.CreatePixelBlock(pbWidth, pbHeight);
+
+                int counter = 0;
+
+                for (int plane = 0; plane < currentPb.GetPlaneCount(); plane++)
+                {
+                    Array sourcePixels = currentPb.GetPixelData(plane, true);
+
+                    int pbH = currentPb.GetHeight();
+                    int pbW = currentPb.GetWidth();
+
+                    for (int i = 0; i < pbH; i++)
+                    {
+                        for (int j = 0; j < pbW; j++)
+                        {
+                            var check = Convert.ToByte(currentPb.GetNoDataMaskValue(plane, j, i));
+
+                            if (check == 1)
+                            {
+                                // Get the pixel value from the array and process it (add 5 to the value).
+                                // Note: This is assuming the pixel type is Unisigned 8bit.
+                                // double dblValue = _parameters.rasterParameters[counter].GridValue;
+                                double dblValue = _parameters.flapParameters[counter].AdjustedValue;
+
+                                int pixelValue = 0;
+
+                                if (bInt)
+                                {
+                                    pixelValue = Convert.ToInt16(dblValue);
+                                    // Make sure the pixel value does not go above the range of the pixel type.
+                                    pixelValue = pixelValue > 255 ? 255 : pixelValue;
+
+                                    if (pixelValue > -99)
+                                        // Set the new pixel value to the array.
+                                        sourcePixels.SetValue(Convert.ToByte(pixelValue), j, i);
+                                }
+                                else
+                                {
+                                    if (dblValue > -99)
+                                        sourcePixels.SetValue(dblValue, j, i);
+                                    // sourcePixels.SetValue(Convert.ToByte(dblValue), j, i);
+                                }
+
+                                counter++;
+                            }
+                        }
+                    }
+                    currentPb.SetPixelData(plane, sourcePixels);
+                }
+
+                editRaster.Write(0, 0, currentPb);
+
+            });
+
+            return true;
+        }
+
+        public static async Task<bool> CreateRasterDataset(string pixel_type, string rasterName, string cellsize, SpatialReference spat_reference, Envelope myExtent)
+        {
+            //temp storage
+            string strTemp = System.Environment.GetEnvironmentVariable("temp");
+
+            //pixel_type = "8_BIT_UNSIGNED";
+            await QueuedTask.Run(() =>
+            {
+                var env = Geoprocessing.MakeEnvironmentArray(extent: myExtent);
+
+                var args = Geoprocessing.MakeValueArray(
+                                        // store the results in the default geodatabase
+                                        //CoreModule.CurrentProject.DefaultGeodatabasePath,
+                                        strTemp,
+                                        // name of the raster dataset
+                                        rasterName + ".tif",
+                                        // cellsize
+                                        cellsize,
+                                        // pixel type
+                                        pixel_type,
+                                        //spatial reference 
+                                        spat_reference,
+                                        //number of bands
+                                        "1",
+                                        //config_key
+                                        "",
+                                        //Pyramids
+                                        "PYRAMIDS 3 BILINEAR DEFAULT",
+                                        //tile_size,
+                                        "128 128",
+                                        //compression
+                                        "LZW",
+                                        //pyramid origin
+                                        "");
+                System.Threading.CancellationTokenSource _cts = new System.Threading.CancellationTokenSource();
+
+                var result = Geoprocessing.ExecuteToolAsync("CreateRasterDataset_management", args, env, _cts.Token, (event_name, o) =>
+                {
+                }, GPExecuteToolFlags.None);
+            });
+
+            return true;
+        }
+
+        public static async Task<bool> SaveToNewRaster(RasterDataset rasterDS, string rasterName, int Cellsize,
+            SpatialReference spat_reference, Envelope myExtent, FeatureLayer featLayer)
+        {
+            await QueuedTask.Run(() =>
+            {
+                RasterStorageDef rasterStoreDef = new RasterStorageDef();
+                rasterStoreDef.SetPyramidLevel(0);
+                rasterStoreDef.SetCellSize(Cellsize, Cellsize);
+                rasterStoreDef.SetTileHeight(128);
+                rasterStoreDef.SetTileWidth(128);
+                rasterStoreDef.SetCompressionType(RasterCompressionType.LZW);
+
+                ArcGIS.Core.Data.Raster.Raster saveRaster = rasterDS.CreateFullRaster();
+
+                saveRaster.SetSpatialReference(spat_reference);
+                saveRaster.SetExtent(myExtent);
+
+                Datastore dataStore = FeatureClassManagement.GetDataStore(featLayer).Result;
+
+                saveRaster.SaveAs(rasterName, dataStore, "", rasterStoreDef);
+
+            });
+
+            return true;
+        }
+
+        public static async Task<RasterDataset> OpenTempRasterDataset(string rasterPath, string rasterName)
+        {
+            RasterDataset rasterTemplate = null;
+
+            await QueuedTask.Run(() =>
+            {
+                FileSystemConnectionPath connectionPath = new FileSystemConnectionPath(new System.Uri(rasterPath), FileSystemDatastoreType.Raster);
+                // Create a new FileSystemDatastore using the FileSystemConnectionPath.
+                FileSystemDatastore dataStore = new FileSystemDatastore(connectionPath);
+                // Open the raster dataset.
+                rasterTemplate = dataStore.OpenDataset<RasterDataset>(rasterName);
+
+            });
+
+            return rasterTemplate;
+        }
+
+        public static async Task<RasterDataset> OpenRasterDataset(string rasterName, FeatureLayer featLayer)
+        {
+            RasterDataset rasterTemplate = null;
+
+            //string geodb = CoreModule.CurrentProject.DefaultGeodatabasePath;
+
+            await QueuedTask.Run(() =>
+            {
+
+                Datastore dataStore = FeatureClassManagement.GetDataStore(featLayer).Result;
+                Uri rasterPath = dataStore.GetPath();
+
+                // Create a FileGeodatabaseConnectionPath using the path to the gdb. Note: This can be a path to a .sde file.
+                FileGeodatabaseConnectionPath geodatabaseConnectionPath = new FileGeodatabaseConnectionPath(rasterPath);
+                // Create a new Geodatabase object using the FileGeodatabaseConnectionPath.
+
+                Geodatabase geodatabase = new Geodatabase(geodatabaseConnectionPath);
+
+                // Open the raster dataset. TODO BUG FIX
+                rasterTemplate = geodatabase.OpenDataset<RasterDataset>(rasterName);
+            });
+
+            return rasterTemplate;
+        }
+
+        public static async Task Progressor_NonCancelable()
+        {
+            ArcGIS.Desktop.Framework.Threading.Tasks.ProgressorSource ps = new ArcGIS.Desktop.Framework.Threading.Tasks.ProgressorSource(ProgressMessage, false);
+
+            int numSecondsDelay = 3;
+            //If you run this in the DEBUGGER you will NOT see the dialog
+            await QueuedTask.Run(() => Task.Delay(numSecondsDelay * 1000).Wait(), ps.Progressor);
+        }
+
+    }
+
     public static class VectorFunctions
     {
         public static string ProgressMessage { get; set; }
@@ -729,37 +931,25 @@ namespace Rose_AGP
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
             #endregion
 
-            double dblMinX = Math.Floor(customEnvelope.XMin);
-            double dblMaxY = Math.Floor(customEnvelope.YMax);
+            double dblMinX = customEnvelope.XMin;
+            double dblMaxY = customEnvelope.YMax;
             double dblMaxX = dblMinX + subCellsize;
             double dblMinY = dblMaxY - subCellsize;
 
@@ -810,7 +1000,6 @@ namespace Rose_AGP
                         }
 
                         if (bGeographics) //unproject
-                            //poly = FeatureClassQuery.ProjectPolygonToWGS84(poly).Result;
                             spoly = FeatureClassQuery.ProjectPolygonGeneric(spoly, originalSpatial).Result;
 
                         QueryFilter _querySquare = new SpatialQueryFilter
@@ -851,11 +1040,6 @@ namespace Rose_AGP
                                             else
                                             {
                                                 calcLine = feature.GetShape() as ArcGIS.Core.Geometry.Polyline;
-                                            }
-
-                                            if (bGeographics)
-                                            {
-                                                calcLine = FeatureClassQuery.ProjectPolylineFromWGS84(calcLine).Result;
                                             }
 
                                             _parameters.flapParameters.Last().LenAzi.Add(new FreqLen
@@ -945,30 +1129,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1026,7 +1198,6 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
                         }
 
                         if (bGeographics) //unproject
-                                          // poly = FeatureClassQuery.ProjectPolygonToWGS84(poly).Result;
                             spoly = FeatureClassQuery.ProjectPolygonGeneric(spoly, originalSpatial).Result;
 
                         QueryFilter _querySquare = new SpatialQueryFilter
@@ -1070,11 +1241,6 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
                                             else
                                             {
                                                 calcLine = feature.GetShape() as ArcGIS.Core.Geometry.Polyline;
-                                            }
-
-                                            if (bGeographics)
-                                            {
-                                                calcLine = FeatureClassQuery.ProjectPolylineFromWGS84(calcLine).Result;
                                             }
 
                                             _parameters.flapParameters.Last().LenAzi.Add(new FreqLen
@@ -1166,30 +1332,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1473,30 +1627,18 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
 
             });
 
+            originalSpatial = mySpatRef;
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
 
             _parameters.SetProperties(customEnvelope);
@@ -1781,32 +1923,29 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
+
             #endregion
+            double dblMinX = 0.0;
+            double dblMaxX = 0.0;
+            double dblMinY = 0.0;
+            double dblMaxY = 0.0;
 
-            //TOTAL extent
-            double dblMinX = Math.Floor(customEnvelope.XMin);
-            double dblMaxY = Math.Floor(customEnvelope.YMax) + 1;
+                //TOTAL extent
+                dblMinX = customEnvelope.XMin;
+                dblMaxY = customEnvelope.YMax;
 
-            double dblMaxX = Math.Floor(customEnvelope.XMax) + 1;
-            double dblMinY = Math.Floor(customEnvelope.YMin);
+                dblMaxX = customEnvelope.XMax;
+                dblMinY = customEnvelope.YMin;
+
 
             double dblCentreX = dblMinX + ((dblMaxX - dblMinX) / 2);
             double dblCentreY = dblMinY + ((dblMaxY - dblMinY) / 2);
@@ -1921,24 +2060,15 @@ int nInterval, RoseGeom roseGeom, string fieldName, bool bSelection)
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
             #endregion
 
             //TOTAL extent
@@ -2053,25 +2183,18 @@ int nInterval, RoseGeom roseGeom, string fieldName)
 
             });
 
+
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                    }
-                }
             }
+
             #endregion
 
             //TOTAL extent
@@ -2145,28 +2268,15 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName)
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
 
             _parameters.SetProperties(customEnvelope);
             #endregion
@@ -2306,28 +2416,15 @@ int nInterval, int rangeFrom, int rangeTo, RoseGeom roseGeom, string fieldName, 
             //check if geographic or unprojected
             if (!mySpatRef.IsProjected)
             {
-                if (!mySpatRef.IsUnknown)
+                if (mySpatRef.IsGeographic)
                 {
-                    originalSpatial = mySpatRef;
-
+                    bGeographics = true;
                     customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
                     mySpatRef = customEnvelope.SpatialReference;
-                    bGeographics = true;
                 }
-                else
-                {
-                    mySpatRef = await FeatureClassQuery.GetSpatialReferenceProp(); //assume same as active view
 
-                    if (mySpatRef.IsGeographic)
-                    {
-                        originalSpatial = mySpatRef;
-
-                        customEnvelope = await FeatureClassQuery.ProjectFromWGS84(customEnvelope);
-                        mySpatRef = customEnvelope.SpatialReference;
-                        bGeographics = true;
-                    }
-                }
             }
+
 
             _parameters.SetProperties(customEnvelope);
             #endregion
